@@ -1,9 +1,17 @@
 import { gql, useQuery } from "@apollo/client";
 import * as React from "react";
+import styled from "styled-components";
 import SketchLogo from "../assets/sketch-logo.svg";
 import { RootQueryType } from "../types";
 import Header from "./common/header";
 import Main from "./common/main";
+
+const Title = styled.p`
+  font-family: Helvetica;
+  font-size: 1rem;
+  font-weight: 400;
+  margin-left: 48px;
+`;
 
 const query = gql`
   {
@@ -42,7 +50,7 @@ const DocumentDetail = () => {
     <>
       <Header>
         <img src={SketchLogo} alt="Sketch Logo" />
-        {data && data.share?.version?.document?.name}
+        {data && <Title>{data.share?.version?.document?.name}</Title>}
       </Header>
       <Main>
         {data &&

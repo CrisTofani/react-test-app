@@ -8,7 +8,7 @@ const Header = styled.header`
   align-items: center;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 2px 5px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-  padding: 0px 16px 0px 16px;
+  padding: 0px 24px 0px 24px;
   background: #ffffff;
 `;
 
