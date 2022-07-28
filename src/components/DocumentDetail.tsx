@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import * as React from "react";
+import SketchLogo from "../assets/sketch-logo.svg";
 import { RootQueryType } from "../types";
 import Header from "./common/header";
 import Main from "./common/main";
@@ -39,7 +40,10 @@ const DocumentDetail = () => {
 
   return (
     <>
-      <Header>{data && data.share?.version?.document?.name}</Header>
+      <Header>
+        <img src={SketchLogo} alt="Sketch Logo" />
+        {data && data.share?.version?.document?.name}
+      </Header>
       <Main>
         {data &&
           data.share?.version?.document?.artboards?.entries.map((atb, idx) => (
