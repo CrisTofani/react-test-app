@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import SketchLogo from "../assets/sketch-logo.svg";
 import { RootQueryType } from "../types";
+import { isSome } from "../utils/typeHelpers";
+import ArtboardPreview from "./ArtboardPreview";
 import Header from "./common/header";
 import Main from "./common/main";
 
@@ -14,6 +16,12 @@ const Title = styled.p`
   margin-left: 48px;
 `;
 
+const ArtboardContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 24px;
+`;
 export type DocumentDetailParams = {
   documentId: string;
 };
@@ -62,10 +70,25 @@ const DocumentDetail = () => {
         {data && <Title>{data.share?.version?.document?.name}</Title>}
       </Header>
       <Main>
-        {data &&
-          data.share?.version?.document?.artboards?.entries.map((atb, idx) => (
-            <p key={idx}>{atb.name}</p>
-          ))}
+        <ArtboardContainer>
+          {data &&
+            data.share &&
+            data.share.version &&
+            data.share.version.document &&
+            data.share.version.document.artboards &&
+            data.share.version.document.artboards.entries.map(
+              (atb, idx) =>
+                atb.files[0].thumbnails &&
+                isSome(atb.files[0].thumbnails) &&
+                atb.files[0].thumbnails[0] && (
+                  <ArtboardPreview
+                    key={idx}
+                    imgSrc={atb.files[0].thumbnails[0].url}
+                    artboardName={atb.name}
+                  />
+                )
+            )}
+        </ArtboardContainer>
       </Main>
     </>
   );

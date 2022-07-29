@@ -3,6 +3,7 @@ import styled from "styled-components";
 const Header = styled.header`
   display: flex;
   position: fixed;
+  z-index: 1;
   height: 64px;
   width: 100%;
   align-items: center;
