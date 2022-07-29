@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import * as React from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import SketchLogo from "../assets/sketch-logo.svg";
 import { RootQueryType } from "../types";
@@ -13,9 +14,13 @@ const Title = styled.p`
   margin-left: 48px;
 `;
 
-const query = gql`
+export type DocumentDetailParams = {
+  documentId: string;
+};
+
+const buildQuery = (documentId?: string) => gql`
   {
-    share(id: "e981971c-ff57-46dc-a932-a60dc1804992") {
+    share(id: "${documentId}") {
       identifier
       version {
         document {
@@ -44,6 +49,10 @@ const query = gql`
 `;
 
 const DocumentDetail = () => {
+  const { documentId } = useParams<keyof DocumentDetailParams>();
+
+  const query = React.useMemo(() => buildQuery(documentId), [documentId]);
+
   const { data } = useQuery<RootQueryType>(query);
 
   return (
