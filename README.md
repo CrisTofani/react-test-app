@@ -1,8 +1,8 @@
-# Frontend Code Test Sketch
+# Frontend Code Test
 
-## Main goal
+## Challenge
 
-You can find the description [here](https://github.com/CrisTofani/react-test-app/blob/master/CHALLENGE.md)
+I reported the description [here](https://github.com/CrisTofani/react-test-app/blob/master/CHALLENGE.md)
 
 ## Requirements
 
