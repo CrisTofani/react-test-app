@@ -1,16 +1,20 @@
-import { useQuery } from "@apollo/client";
+import { ApolloError } from "@apollo/client";
 import * as React from "react";
-import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import SketchLogo from "../assets/sketch-logo.svg";
+import { noArtboard, queryError } from "../constants/errorMessages";
 import { RootQueryType } from "../types";
-import { buildQuery } from "../utils/gqlQuery";
 import { isSome } from "../utils/typeHelpers";
-import ArtboardPreview from "./ArtboardPreview";
+import ArtboardThumbnail from "./ArtboardThumbnail";
 import ErrorMessage from "./common/ErrorMessage";
 import Header from "./common/header";
-import Loader from "./common/loader";
 import Main from "./common/main";
+
+type Props = {
+  onThumbnailClick: (id: number) => void;
+  data?: RootQueryType;
+  error?: ApolloError;
+};
 
 const Title = styled.p`
   font-family: Helvetica;
@@ -26,51 +30,38 @@ const ArtboardContainer = styled.div`
   padding: 24px;
 `;
 
-type DocumentDetailParams = {
-  documentId: string;
-};
-
-const DocumentDetail = () => {
-  const { documentId } = useParams<keyof DocumentDetailParams>();
-
-  const query = React.useMemo(() => buildQuery(documentId), [documentId]);
-
-  const { data, loading, error } = useQuery<RootQueryType>(query);
-
-  return (
-    <>
-      <Header>
-        <img src={SketchLogo} alt="Sketch Logo" />
-        {data && <Title>{data.share?.version?.document?.name}</Title>}
-      </Header>
-      <Main>
+const DocumentDetail = ({ data, error, onThumbnailClick }: Props) => (
+  <>
+    <Header>
+      <img src={SketchLogo} alt="Sketch Logo" />
+      {data && <Title>{data.share?.version?.document?.name}</Title>}
+    </Header>
+    <Main>
+      {error ? (
+        <ErrorMessage message={queryError} />
+      ) : (
         <ArtboardContainer>
-          {loading ? (
-            <Loader />
-          ) : error ? (
-            <ErrorMessage
-              message={`Ooops... Something's wrong while requesting the document :(`}
-            />
-          ) : data && data?.share?.version?.document?.artboards ? (
+          {data && data?.share?.version?.document?.artboards ? (
             data.share.version.document.artboards.entries.map(
               (atb, idx) =>
                 atb.files[0].thumbnails &&
                 isSome(atb.files[0].thumbnails) &&
                 atb.files[0].thumbnails[0] && (
-                  <ArtboardPreview
+                  <ArtboardThumbnail
                     key={idx}
                     imgSrc={atb.files[0].thumbnails[0].url}
                     artboardName={atb.name}
+                    onClick={() => onThumbnailClick(idx)}
                   />
                 )
             )
           ) : (
-            <ErrorMessage message={"No artboard found for the document"} />
+            <ErrorMessage message={noArtboard} />
           )}
         </ArtboardContainer>
-      </Main>
-    </>
-  );
-};
+      )}
+    </Main>
+  </>
+);
 
 export default DocumentDetail;

@@ -6,6 +6,7 @@ import { isSomeDefined } from "../utils/typeHelpers";
 type Props = {
   imgSrc?: Maybe<string>;
   artboardName: string;
+  onClick: () => void;
 };
 
 const Container = styled.div`
@@ -30,23 +31,20 @@ const ArtboardName = styled.p`
   padding-top: 16px;
 `;
 
-const ArtboardThumbnail = styled.img`
+const Thumbnail = styled.img`
   display: flex;
   margin: auto;
   max-width: 240px;
   max-height: 305px;
 `;
 
-const ArtboardPreview = (props: Props) => (
+const ArtboardThumbnail = (props: Props) => (
   <Container>
     {isSomeDefined(props.imgSrc) && (
-      <ArtboardThumbnail
-        src={props.imgSrc}
-        alt={`${props.artboardName}_thumbnail`}
-      />
+      <Thumbnail src={props.imgSrc} alt={`${props.artboardName}_thumbnail`} />
     )}
     <ArtboardName>{props.artboardName}</ArtboardName>
   </Container>
 );
 
-export default ArtboardPreview;
+export default ArtboardThumbnail;
