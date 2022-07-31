@@ -1,3 +1,4 @@
+import * as React from "react";
 import styled, { keyframes } from "styled-components";
 
 const rotate360 = keyframes`
@@ -12,7 +13,6 @@ const rotate360 = keyframes`
 const Loader = styled.div`
   animation: ${rotate360} 1s linear infinite;
   transform: translateZ(0);
-
   border-top: 2px solid grey;
   border-right: 2px solid grey;
   border-bottom: 2px solid grey;
@@ -21,6 +21,19 @@ const Loader = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
+  margin: auto;
 `;
 
-export default Loader;
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const LoadingSpinner = () => (
+  <Container>
+    <Loader />
+  </Container>
+);
+
+export default LoadingSpinner;

@@ -18,6 +18,7 @@ const Container = styled.div`
   align-items: center;
   padding: 24px 8px 24px 8px;
   margin-right: auto;
+  cursor: pointer;
 `;
 
 const ArtboardName = styled.p`
@@ -39,7 +40,7 @@ const Thumbnail = styled.img`
 `;
 
 const ArtboardThumbnail = (props: Props) => (
-  <Container>
+  <Container onClick={() => props.onClick()}>
     {isSomeDefined(props.imgSrc) && (
       <Thumbnail src={props.imgSrc} alt={`${props.artboardName}_thumbnail`} />
     )}
