@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router";
 import { BrowserRouter, Navigate } from "react-router-dom";
 import DocumentDetail from "./components/DocumentDetail";
+import DocumentsHome from "./components/DocumentsHome";
 
 function App() {
   return (
@@ -9,18 +10,9 @@ function App() {
       <Routes>
         <Route path="documents/">
           <Route path=":documentId" element={<DocumentDetail />} />
-          <Route path=":documentId/artboard/:artboardId" />
-          <Route path="" />
+          <Route path="" element={<DocumentsHome />} />
         </Route>
-        <Route
-          path="*"
-          element={
-            <Navigate
-              to="/documents/e981971c-ff57-46dc-a932-a60dc1804992"
-              replace
-            />
-          }
-        />
+        <Route path="*" element={<Navigate to="/documents" />} />
       </Routes>
     </BrowserRouter>
   );

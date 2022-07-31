@@ -1,12 +1,15 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import SketchLogo from "../assets/sketch-logo.svg";
 import { RootQueryType } from "../types";
+import { buildQuery } from "../utils/gqlQuery";
 import { isSome } from "../utils/typeHelpers";
 import ArtboardPreview from "./ArtboardPreview";
+import ErrorMessage from "./common/ErrorMessage";
 import Header from "./common/header";
+import Loader from "./common/loader";
 import Main from "./common/main";
 
 const Title = styled.p`
@@ -22,46 +25,17 @@ const ArtboardContainer = styled.div`
   flex-wrap: wrap;
   padding: 24px;
 `;
-export type DocumentDetailParams = {
+
+type DocumentDetailParams = {
   documentId: string;
 };
-
-const buildQuery = (documentId?: string) => gql`
-  {
-    share(id: "${documentId}") {
-      identifier
-      version {
-        document {
-          name
-          artboards {
-            entries {
-              name
-              isArtboard
-              files {
-                url
-                height
-                width
-                scale
-                thumbnails {
-                  url
-                  height
-                  width
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
 
 const DocumentDetail = () => {
   const { documentId } = useParams<keyof DocumentDetailParams>();
 
   const query = React.useMemo(() => buildQuery(documentId), [documentId]);
 
-  const { data } = useQuery<RootQueryType>(query);
+  const { data, loading, error } = useQuery<RootQueryType>(query);
 
   return (
     <>
@@ -71,11 +45,13 @@ const DocumentDetail = () => {
       </Header>
       <Main>
         <ArtboardContainer>
-          {data &&
-            data.share &&
-            data.share.version &&
-            data.share.version.document &&
-            data.share.version.document.artboards &&
+          {loading ? (
+            <Loader />
+          ) : error ? (
+            <ErrorMessage
+              message={`Ooops... Something's wrong while requesting the document :(`}
+            />
+          ) : data && data?.share?.version?.document?.artboards ? (
             data.share.version.document.artboards.entries.map(
               (atb, idx) =>
                 atb.files[0].thumbnails &&
@@ -87,7 +63,10 @@ const DocumentDetail = () => {
                     artboardName={atb.name}
                   />
                 )
-            )}
+            )
+          ) : (
+            <ErrorMessage message={"No artboard found for the document"} />
+          )}
         </ArtboardContainer>
       </Main>
     </>
